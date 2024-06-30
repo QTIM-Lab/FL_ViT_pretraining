@@ -3,9 +3,11 @@ This file contains instructions on how to run an SSL-encrpyted gRPC server on EC
 
 ## Environment Setup
 
-Install `conda`.
+Install `git` and `conda`.
 
 ```bash
+sudo yum update -y
+sudo yum install git -y
 mkdir conda
 cd conda
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -18,6 +20,7 @@ Create a virtual environment, and do necessary installation.
 
 ```bash
 conda create -n flower python=3.10 --y
+conda activate flower
 git clone --depth=1 https://github.com/adap/flower.git && mv flower/examples/advanced-tensorflow . && rm -rf flower && cd advanced-tensorflow
 pip install -r requirements.txt # Comment out the second line
 pip install "flwr-datasets[vision]"
