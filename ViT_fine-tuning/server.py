@@ -10,7 +10,6 @@ from torchvision.transforms import (
     Compose,
     Normalize,
     ToTensor,
-    RandomResizedCrop,
     Resize,
     CenterCrop,
 )
@@ -51,7 +50,6 @@ def get_evaluate_fn(
             Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
         ]
         )
-        # testset = centralized_testset.with_transform(apply_eval_transforms)
 
         testset = IR_Dataset('../IR_data/RAVIR Dataset/test', '../IR_data/RAVIR Dataset/test.csv', 'laterality', 'test', transforms)
 
@@ -78,4 +76,13 @@ strategy = fl.server.strategy.FedAvg(
 
 
 
-fl.server.start_server(server_address="0.0.0.0:8080", config=fl.server.ServerConfig(num_rounds=2), strategy=strategy)
+fl.server.start_server(server_address="0.0.0.0:8080", 
+                       config=fl.server.ServerConfig(num_rounds=16), 
+                       strategy=strategy, 
+                       # certificates=certificates=(
+                       #      Path("/crts/root.pem").read_bytes(),
+                       #      Path("/crts/localhost.crt").read_bytes(),
+                       #      Path("/crts/localhost.key").read_bytes()
+                       #  ),
+                      )
+

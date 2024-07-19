@@ -1,0 +1,16 @@
+To run this set up you will need to first need to set up the certificates, which you can find instructions for in the how_ssl.md file
+
+For this example there is a train, validation and test set, which should each be a folder in your directory somewhere. In each folder, there will two subfolders for each class of laterality where R is 1 and L is 0
+
+Paths for train/val/will need to be updated appropriately and if you don't see a stable performance e.g, not getting consistent accuracy close to 1.0, try lowering the learning rate (e.g., changing 0.0005 to 0.0002)
+
+
+Once set up (with IP addresses set appropriately)
+
+run python3 server.py to start the server
+
+and python3 client.py to start the servers
+
+Be sure to configure the minimum number of clients, min_fit_clients, in the server.py
+
+

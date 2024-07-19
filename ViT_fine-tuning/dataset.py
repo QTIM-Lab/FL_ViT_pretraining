@@ -2,14 +2,23 @@
 
 import os
 import pandas as pd
-
 from torch.utils.data import Dataset
 from torchvision.datasets.folder import pil_loader
+
+transform = transforms.Compose(
+    [
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize(
+            mean=(0.5478, 0.5478, 0.5478), std=(0.1175, 0.1175, 0.1175)
+        ),
+    ]
+)
 
 class IR_Dataset(Dataset):
     """Dataset class for IR images"""
 
-    def __init__(self, root: str, labels_file: str, label_col: str, split: str, transform = None, target_transform=None):
+    def __init__(self, root: str, labels_file: str, label_col: str, split: str, transform = None):
         """Initialize dataset"""
         
         self.img_dir = root

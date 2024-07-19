@@ -1,0 +1,16 @@
+To run this set up you will need to first need to set up the certificates, which you can find instructions for in the how_ssl.md file
+
+For this example there is only a training set, which should be in a folder accessed via ../data/files',
+
+In the /data/ folder, there should also be a data.csv where there in a colum called 'laterality_binary' which should be a binary value for each image. R is 1 and L is 0
+
+
+Once set up (with IP addresses set appropriately)
+
+run python3 server.py to start the server
+
+and python3 client.py to start the servers
+
+Be sure to configure the minimum number of clients, min_fit_clients, in the server.py
+
+
