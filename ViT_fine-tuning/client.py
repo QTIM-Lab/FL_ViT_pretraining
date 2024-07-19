@@ -6,6 +6,16 @@ from flwr.client import NumPyClient, start_client
 from dataset import apply_transforms, get_dataset_with_partitions
 from model import get_model, set_parameters, train
 
+from dataset import IR_Dataset
+
+from torchvision.transforms import (
+    Compose,
+    Normalize,
+    ToTensor,
+    RandomResizedCrop,
+    Resize,
+    CenterCrop,
+)
 
 class FedViTClient(NumPyClient):
     def __init__(self, trainset):
@@ -37,7 +47,7 @@ class FedViTClient(NumPyClient):
     def fit(self, parameters, config):
         set_parameters(self.model, parameters)
 
-        # Get some info from the config
+        
         # Get batchsize and LR set from server
         batch_size = config["batch_size"]
         lr = config["lr"]
@@ -66,23 +76,26 @@ federated_ox_flowers, _ = get_dataset_with_partitions(num_partitions=3)
 
 def client_fn(cid: str):
     """Return a FedViTClient that trains with the cid-th data partition."""
-    # print(cid)
-    trainset_for_this_client = federated_ox_flowers.load_partition(1, "train")
 
-    trainset = trainset_for_this_client.with_transform(apply_transforms)
+    transforms = Compose(
+        [
+            RandomResizedCrop((224, 224)),
+            ToTensor(),
+       
+            Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+        ]
+    )
+ 
+    #replace the following paths 
+    trainset = IR_Dataset('../IR_data/RAVIR Dataset/train/training_images', '../IR_data/RAVIR Dataset/train/train.csv', 'laterality', 'train', transforms)
 
     return FedViTClient(trainset).to_client()
 
 
-# To be used with Flower Next
-app = flwr.client.ClientApp(
-    client_fn=client_fn,
-)
-
 if __name__ == '__main__':
 
-    start_client(
-        server_address="127.0.0.1:8080",
+    start_client( 
+        server_address="127.0.0.1:8080", #replace with the server address if not training on the same machine 
         client_fn=client_fn,
     )
 

@@ -10,12 +10,8 @@ def get_model():
     # Instantiate a pre-trained ViT-B on ImageNet
     model = vit_b_16(weights=ViT_B_16_Weights.IMAGENET1K_V1)
 
-    # We're going to federated the finetuning of this model
-    # using the Oxford Flowers-102 dataset. One easy way to achieve
-    # this is by re-initializing the output block of the ViT so it
-    # outputs 102 clases instead of the default 1k
     in_features = model.heads[-1].in_features
-    model.heads[-1] = torch.nn.Linear(in_features, 102)
+    model.heads[-1] = torch.nn.Linear(in_features, 2)
 
     # Disable gradients for everything
     model.requires_grad_(False)
@@ -23,7 +19,6 @@ def get_model():
     model.heads.requires_grad_(True)
 
     return model
-
 
 def set_parameters(model, parameters):
     """Apply the parameters to the model.
