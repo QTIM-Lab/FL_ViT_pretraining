@@ -14,3 +14,4 @@ and python3 client.py to start the servers
 Be sure to configure the minimum number of clients, min_fit_clients, in the server.py
 
 
+This approach uses the old version of the Flower API
