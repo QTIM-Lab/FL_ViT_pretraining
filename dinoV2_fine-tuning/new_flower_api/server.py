@@ -22,10 +22,10 @@ def get_evaluate_fn():
         model = get_model()
         set_parameters(model, parameters)
         model.to(device)
-        server_test_data_path = "replace with your own" #change me
+        server_test_data_path = "replace with path to test data" #change me
         testset = ImageDataset(server_test_data_path, transform)
-        testloader = DataLoader(testset, batch_size=16)
-        loss, accuracy = validate(model, testloader, device=device)
+        testloader = DataLoader(testset, batch_size=16, shuffle=False)
+        loss, accuracy = validate(model, testloader, device)
         print(f"Test - Loss: {loss}, Accuracy: {accuracy}")
         return loss, {"accuracy": accuracy}
     return evaluate

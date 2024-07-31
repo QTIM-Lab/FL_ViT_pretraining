@@ -16,8 +16,6 @@ def set_parameters(model, parameters):
     model.load_state_dict(state_dict, strict=True)
 
 
-
-
 def train(net, trainloader, valloader, optimizer, epochs, device):
     criterion = torch.nn.CrossEntropyLoss().to(device)
     net.to(device)
@@ -31,8 +29,8 @@ def train(net, trainloader, valloader, optimizer, epochs, device):
             loss.backward()
             optimizer.step()
 
-    train_loss, train_acc = validate(net, trainloader)
-    val_loss, val_acc = validate(net, valloader)
+    train_loss, train_acc = validate(net, trainloader, device)
+    val_loss, val_acc = validate(net, valloader, device)
 
     results = {
         "train_loss": train_loss,
@@ -44,9 +42,7 @@ def train(net, trainloader, valloader, optimizer, epochs, device):
     return results
 
 def validate(net, dataloader, device):
-    net.to("cpu")  # move model back to CPU
     criterion = torch.nn.CrossEntropyLoss()
-    net.to(device)
     net.eval()
     correct, loss = 0, 0.0
     with torch.no_grad():

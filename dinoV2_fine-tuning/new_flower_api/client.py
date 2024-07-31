@@ -18,7 +18,7 @@ class FedViTClient(NumPyClient):
         return [val.cpu().numpy() for _, val in model.state_dict().items()]
     
     def evaluate(self, config):
-        valloader = DataLoader(self.valset, batch_size=batch_size, shuffle=False)
+        valloader = DataLoader(self.valset, batch_size=config["batch_size"], shuffle=False)
         avg_val_loss, val_accuracy = validate(self.model, valloader, self.device)
         return avg_val_loss, {"accuracy": val_accuracy}
 
@@ -41,10 +41,6 @@ class FedViTClient(NumPyClient):
             device=self.device,
         )
         
-
-        print(
-            f"Fit - Train Loss: {avg_train_loss}, Val Loss: {avg_val_loss}, Val Accuracy: {val_accuracy}"
-        )
         
         print(f"Fit - Results:\n"
           f"Train Loss: {results['train_loss']}\n"
@@ -60,8 +56,8 @@ class FedViTClient(NumPyClient):
 
     
 def client_fn(cid: str):
-    client_train_data_path = "replace with your own" #change me
-    client_val_data_path = "replace with your own" #change me
+    client_train_data_path = "replace with path to train data" #change me
+    client_val_data_path = "replace with path to val data" #change me
     
     trainset = ImageDataset(client_train_data_path, transform)
     valset = ImageDataset(client_val_data_path, transform)
