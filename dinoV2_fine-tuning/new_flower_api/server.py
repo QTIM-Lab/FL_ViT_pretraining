@@ -3,7 +3,7 @@ from torch.utils.data import DataLoader
 import flwr as fl
 from dataset import ImageDataset, transform
 import torchvision.transforms as transforms
-from model import get_model, set_parameters, test
+from model import get_model, set_parameters, validate
 
 from flwr.server import ServerApp, ServerConfig
 from flwr.server.strategy import FedAvg
@@ -19,20 +19,20 @@ def fit_config(server_round: int):
 def get_evaluate_fn():
     def evaluate(server_round, parameters, config):
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
         model = get_model()
         set_parameters(model, parameters)
         model.to(device)
-        test_data_path = "replace with your own path"
-        testset = ImageDataset(test_data_path, transform)
+        server_test_data_path = "replace with your own" #change me
+        testset = ImageDataset(server_test_data_path, transform)
         testloader = DataLoader(testset, batch_size=16)
-        loss, accuracy = test(model, testloader, device=device)
-        print(f"Evaluation - Loss: {loss}, Accuracy: {accuracy}")
+        loss, accuracy = validate(model, testloader, device=device)
+        print(f"Test - Loss: {loss}, Accuracy: {accuracy}")
         return loss, {"accuracy": accuracy}
-
     return evaluate
 
 # Define strategy
+
+
 strategy = FedAvg(
     fraction_fit=1,
     fraction_evaluate=1,

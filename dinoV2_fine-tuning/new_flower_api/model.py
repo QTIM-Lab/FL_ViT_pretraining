@@ -16,57 +16,45 @@ def set_parameters(model, parameters):
     model.load_state_dict(state_dict, strict=True)
 
 
-def validate(net, validationloader, device):
-    criterion = torch.nn.CrossEntropyLoss()
-    net.to(device)
-    net.eval()
-    val_loss = 0
-    correct = 0
-    print("Validating")
-    with torch.no_grad():
-        for batch in validationloader:
-            images, labels = batch["image"].to(device), batch["label"].to(device)
-            outputs = net(images)
-            loss = criterion(outputs, labels)
-            val_loss += loss.item()
-            _, predicted = torch.max(outputs.data, 1)
-            correct += (predicted == labels).sum().item()
-    accuracy = correct / len(validationloader.dataset)
-    return val_loss / len(validationloader), accuracy
 
 
-def train(net, trainloader, validationloader, optimizer, epochs, device):
-    criterion = torch.nn.CrossEntropyLoss()
+def train(net, trainloader, valloader, optimizer, epochs, device):
+    criterion = torch.nn.CrossEntropyLoss().to(device)
     net.to(device)
     net.train()
-    avg_loss = 0
     for epoch in range(epochs):
         print("Training, epoch {}".format(epoch))
         for batch in trainloader:
             images, labels = batch["image"].to(device), batch["label"].to(device)
             optimizer.zero_grad()
             loss = criterion(net(images), labels)
-            avg_loss += loss.item() / labels.shape[0]
             loss.backward()
             optimizer.step()
 
-    avg_val_loss, val_accuracy = validate(net, validationloader, device)
-    
-    
-    return avg_loss / len(trainloader), avg_val_loss, val_accuracy
+    train_loss, train_acc = validate(net, trainloader)
+    val_loss, val_acc = validate(net, valloader)
 
+    results = {
+        "train_loss": train_loss,
+        "train_accuracy": train_acc,
+        "val_loss": val_loss,
+        "val_accuracy": val_acc,
+    }
+    
+    return results
 
-def test(net, testloader, device: str):
+def validate(net, dataloader, device):
+    net.to("cpu")  # move model back to CPU
     criterion = torch.nn.CrossEntropyLoss()
     net.to(device)
-    correct, loss = 0, 0.0
     net.eval()
+    correct, loss = 0, 0.0
     with torch.no_grad():
-        for data in testloader:
-            images, labels = data["image"].to(device), data["label"].to(device)
+        for batch in dataloader:
+            images, labels = batch["image"].to(device), batch["label"].to(device)
             outputs = net(images)
             loss += criterion(outputs, labels).item()
             _, predicted = torch.max(outputs.data, 1)
             correct += (predicted == labels).sum().item()
-    accuracy = correct / len(testloader.dataset)
+    accuracy = correct / len(dataloader.dataset)
     return loss, accuracy
