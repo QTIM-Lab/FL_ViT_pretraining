@@ -23,8 +23,8 @@ def get_evaluate_fn():
         model = get_model()
         set_parameters(model, parameters)
         model.to(device)
-
-        testset = ImageDataset("/home/jupyter/fl_fine_tuning/dinov2_fine_tuning/data/test", transform)
+        test_data_path = "replace with your own path"
+        testset = ImageDataset(test_data_path, transform)
         testloader = DataLoader(testset, batch_size=16)
         loss, accuracy = test(model, testloader, device=device)
         print(f"Evaluation - Loss: {loss}, Accuracy: {accuracy}")

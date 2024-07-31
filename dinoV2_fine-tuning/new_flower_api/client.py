@@ -50,8 +50,10 @@ class FedViTClient(NumPyClient):
 
     
 def client_fn(cid: str):
-    trainset = ImageDataset("/home/jupyter/fl_fine_tuning/dinov2_fine_tuning/data/train", transform)
-    valset = ImageDataset("/home/jupyter/fl_fine_tuning/dinov2_fine_tuning/data/validation", transform)
+    train_data_path = "replace with your own path"
+    val_data_path = "replace with your own path"
+    trainset = ImageDataset(train_data_path, transform)
+    valset = ImageDataset(val_data_path, transform)
     return FedViTClient(trainset, valset).to_client()
 
 
