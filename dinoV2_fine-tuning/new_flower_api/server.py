@@ -33,12 +33,14 @@ def get_evaluate_fn():
     return evaluate
 
 # Define strategy
-
-
 strategy = FedAvg(
+    fraction_fit=1,
+    fraction_evaluate=1,
     on_fit_config_fn=fit_config,
     evaluate_fn=get_evaluate_fn(),
     min_fit_clients=2,
+    min_evaluate_clients=2,
+    min_available_clients=2,
 )
 
 # Define config
