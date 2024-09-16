@@ -2,7 +2,7 @@
 
 **There are the detailed instructions on fine-tuning ViT using APPFL at [here](https://appfl.ai/en/latest/tutorials/examples_vit_finetuning.html)**
 
-
+**There are video tutorials available on [YouTube](https://youtu.be/m4rdOub2Y_o)**
 
 ### Installation
 
@@ -18,7 +18,7 @@ Then, we can install the `appfl` package, there are two different ways: (1) Inst
 
 ```bash
 # Install directly via pip
-pip install appfl 
+pip install "appfl[examples]"
 # OR
 # Install via building from source code
 git clone --single-branch --branch main https://github.com/APPFL/APPFL.git
